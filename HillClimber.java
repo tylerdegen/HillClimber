@@ -1,10 +1,13 @@
 import java.io.*;
 import java.lang.*;
 import java.util.*;
+import java.util.Random;
 
 public class HillClimber {
 	
 	public int[][] board = new int[4][4];
+	public boolean[][] asterisk = new boolean[4][4];
+	Random rand = new Random();
 
 	//init
 	public HillClimber(String filename){
@@ -21,19 +24,38 @@ public class HillClimber {
 			System.out.println("SHOULD START WITH FOUR");
 		}
 		
+		//take each char by char
+		//if asterisk, mark in the array of ast and set rand val
+		int i = 0;
+		char c = 'a';
+		int val = 0;
 		while ((line = br.readLine()) != null){
 			System.out.println(line);
+			for (int j = 0; j < 4; j++){
+				c = line.charAt(j);
+				if (c == '*'){
+					asterisk[i][j] = true;
+					val = rand.nextInt(4) + 1;
+				}
+				else{
+					val = Character.getNumericValue(c);
+				}
+				board[i][j] = val;
+			}
+			i++;
 		}
 		in.close();
 		}catch (Exception e){
 			System.err.println(e.getMessage());
 		}
 		
+		/*
 		for (int i=0; i < 4; i++){
 			for (int j=0; j < 4; j++){
 				board[i][j] = j+1;
 			}
 		}
+		*/
 		
 		
 	}
