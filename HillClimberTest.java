@@ -8,7 +8,8 @@ public class HillClimberTest {
 	public static void main(String args[]){
 		System.out.println("Test");
 		
-		HillClimber h = new HillClimber();
+		HillClimber h = new HillClimber("test.txt");
 		h.printState();
+		System.out.println(h.checkState());
 	}
 }
