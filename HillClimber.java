@@ -7,5 +7,7 @@ public class HillClimber {
 	
 	public static void main(String args[]){
 		System.out.println("Test");
+		
+		int[][] board = new int[4][4];
 	}
 }
