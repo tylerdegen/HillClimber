@@ -8,7 +8,11 @@ public class HillClimber {
 	public int[][] board = new int[4][4];
 	public boolean[][] asterisk = new boolean[4][4];
 	Random rand = new Random();
-
+	//do I want to do a double digit mod or do I want to just have a regular mod
+	//index is occurrence of asterisk (1st, 2nd, etc.), value is [x/4][x%4]
+	int[] indexOfAst = new int[16];
+	int indexOfIndex = 0;
+	
 	//init
 	public HillClimber(String filename){
 		//board = {{1,2,3,4},{5,6,7,8},{1,2,3,4},{1,2,3,4}};
@@ -36,6 +40,9 @@ public class HillClimber {
 				if (c == '*'){
 					asterisk[i][j] = true;
 					val = rand.nextInt(4) + 1;
+					//so to set index, i*4 + j
+					indexOfAst[indexOfIndex] = (i*4) + j;
+					indexOfIndex++;
 				}
 				else{
 					val = Character.getNumericValue(c);
@@ -175,7 +182,17 @@ public class HillClimber {
 		return points;
 	}
 	
-	
+	public void climb(){
+		//randomly choose an asterisk, see if adjusting value will provide improvemnet
+		//if not, try another asterisk
+		for (int i=0; i<indexOfIndex; i++){
+			System.out.println(indexOfAst[i]);
+			int temp = indexOfAst[i];
+			int tempI = temp/4;
+			int tempJ = temp%4;
+			System.out.println("["+tempI+"]["+tempJ+"]");
+		}
+	}
 	
 	public static void main(String args[]){
 		System.out.println("Test");
