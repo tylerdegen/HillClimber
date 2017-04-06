@@ -6,25 +6,25 @@ import java.io.*;
 import java.lang.*;
 import java.util.*;
 
-public class HillClimberTest {
-	private HillClimberTest(){}
+public class GeneticAlgorithmTest {
+	private GeneticAlgorithmTest(){}
 	
 	public static void main(String args[]){
 		//System.out.println("Test");
 		
 		String filename = args[0];
 		//System.out.println(filename);
-		HillClimber h = new HillClimber(filename);
+		GeneticAlgorithm g = new GeneticAlgorithm(filename);
 		System.out.println("Initial state: ");
-		h.printState();
-		System.out.println(h.checkState());
+		g.printState();
+		System.out.println(g.checkState());
 		//h.climb();
 		
-		for(int i = 0; i < 500 && h.checkState() != 0; i++){
-			h.climb();
+		for(int i = 0; i < 500 && g.checkState() != 0; i++){
+			g.gen_alg();
 			System.out.println("Iteration " + i + ": ");
-			h.printState();
-			System.out.println(h.checkState());
+			g.printState();
+			System.out.println(g.checkState());
 		}
 	}
 }

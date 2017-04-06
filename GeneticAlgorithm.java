@@ -7,7 +7,7 @@ import java.lang.*;
 import java.util.*;
 import java.util.Random;
 
-public class HillClimber {
+public class GeneticAlgorithm {
 	
 	public int[][] board = new int[4][4];
 	public boolean[][] asterisk = new boolean[4][4];
@@ -18,7 +18,7 @@ public class HillClimber {
 	int indexOfIndex = 0;
 	
 	//init
-	public HillClimber(String filename){
+	public GeneticAlgorithm(String filename){
 		//board = {{1,2,3,4},{5,6,7,8},{1,2,3,4},{1,2,3,4}};
 		try{
 		FileInputStream fstream = new FileInputStream(filename);
@@ -301,47 +301,70 @@ public class HillClimber {
 		return points;
 	}
 	
-	public void climb(){
-		//randomly choose an asterisk, see if adjusting value will provide improvemnet
-		//if not, try another asterisk
-		/*
-		for (int i=0; i<indexOfIndex; i++){
-			//System.out.println(indexOfAst[i]);
-			int temp = indexOfAst[i];
-			int tempI = temp/4;
-			int tempJ = temp%4;
-			//System.out.println("["+tempI+"]["+tempJ+"]");
-		}*/
+	public int generateChild(int[][] parent, int[][] child, int i, int j){
+		int bestVal = parent[i][j];
+		int conflict = checkInternalState(board);
+		int tempCheckState;
 		
+		for (int x = 0; x <4; x++){
+			child[i][j] = x;
+			tempCheckState = checkInternalState(child);
+			if (tempCheckState < conflict){
+				conflict = tempCheckState;
+				bestVal = x;
+			}
+		}
+		child[i][j] = bestVal;
+		return bestVal;
+	}
+	
+	public void gen_alg(){
+		int tempInd1 = rand.nextInt(indexOfIndex);
+		int temp1 = indexOfAst[tempInd1];
+		int tempI1 = temp1/4;
+		int tempJ1 = temp1%4;
 		
-		int tempInd = rand.nextInt(indexOfIndex);
-		int temp = indexOfAst[tempInd];
-		int tempI = temp/4;
-		int tempJ = temp%4;
+		int tempInd2 = rand.nextInt(indexOfIndex);
+		while (tempInd2 == tempInd1){
+			tempInd2 = rand.nextInt(indexOfIndex);
+		}
+		int temp2 = indexOfAst[tempInd2];
+		int tempI2 = temp2/4;
+		int tempJ2 = temp2%4;
 		
-		int[][] testState = new int[4][4];
+		int[][] child1 = new int[4][4];
 		for (int i=0; i < board.length; i++)
 		{
 			int[] aBoard = board[i];
 			int aLength = aBoard.length;
-			testState[i] = new int[aLength];
-			System.arraycopy(aBoard, 0, testState[i], 0, aLength);
+			child1[i] = new int[aLength];
+			System.arraycopy(aBoard, 0, child1[i], 0, aLength);
 		}
-		//printInternalState(testState);
-		//System.out.println(checkInternalState(testState));
-		int bestVal = board[tempI][tempJ];
-		int conflict = checkInternalState(board);
-		int tempCheckState;
 		
-		for (int i = 1; i <=4; i++){
-			testState[tempI][tempJ] = i;
-			tempCheckState = checkInternalState(testState);
-			if (tempCheckState < conflict){
-				conflict = tempCheckState;
-				bestVal = i;
-			}
+		int[][] child2 = new int[4][4];
+		for (int i=0; i < board.length; i++)
+		{
+			int[] aBoard = board[i];
+			int aLength = aBoard.length;
+			child2[i] = new int[aLength];
+			System.arraycopy(aBoard, 0, child2[i], 0, aLength);
 		}
-		board[tempI][tempJ] = bestVal;
+		
+		int newVal1 = generateChild(board, child1, tempI1, tempJ1);
+		int newVal2 = generateChild(board, child2, tempI2, tempJ2);
+		
+		//reproduce
+		child1[tempI2][tempI2] = child2[tempI2][tempI2];
+		child2[tempI1][tempI1] = child1[tempI1][tempI1];
+		int child1Val = checkInternalState(child1);
+		int child2Val = checkInternalState(child2);
+		
+		if (child1Val < child2Val){
+			board[tempI1][tempI1] = newVal1;
+			board[tempI2][tempI2] = newVal2;
+		}
+		
+		
 	}
 	
 	public static void main(String args[]){
