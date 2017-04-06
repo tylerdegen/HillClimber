@@ -34,7 +34,7 @@ public class HillClimber {
 		char c = 'a';
 		int val = 0;
 		while ((line = br.readLine()) != null){
-			System.out.println(line);
+			//System.out.println(line);
 			for (int j = 0; j < 4; j++){
 				c = line.charAt(j);
 				if (c == '*'){
@@ -72,6 +72,17 @@ public class HillClimber {
 		for (int i=0; i < 4; i++){
 			for (int j=0; j < 4; j++){
 				line+= board[i][j];
+			}
+			System.out.println(line);
+			line = "";
+		}
+	}
+	
+	public void printInternalState(int[][] state){
+		String line = "";
+		for (int i=0; i < 4; i++){
+			for (int j=0; j < 4; j++){
+				line+= state[i][j];
 			}
 			System.out.println(line);
 			line = "";
@@ -182,16 +193,151 @@ public class HillClimber {
 		return points;
 	}
 	
+		//returns number of points accrued, zero implies success state
+	public int checkInternalState(int[][] state){
+		int points = 0;
+		//check row
+		boolean one, two, three, four;
+		//initially all false
+		boolean[] has = new boolean[5];
+		int value;
+		one = two = three = four = false;
+		
+		//check rows
+		for (int i = 0; i < 4; i++){
+			//go through each row digit
+			for (int j = 0; j < 4; j++){
+				value = state[i][j];
+				if (has[value]){
+					points++;
+				}
+				else{
+					has[value] = true;
+				}
+			}
+			Arrays.fill(has, false);
+		}
+		
+		//check columns
+		for (int i = 0; i < 4; i++){
+			//go through each column digit
+			for (int j = 0; j < 4; j++){
+				value = state[j][i];
+				if (has[value]){
+					points++;
+				}
+				else{
+					has[value] = true;
+				}
+			}
+			Arrays.fill(has, false);
+		}
+		
+		//check quadrants
+		//q2
+		for (int i = 0; i < 2; i++){
+			//go through each column digit
+			for (int j = 0; j < 2; j++){
+				value = state[j][i];
+				if (has[value]){
+					points++;
+				}
+				else{
+					has[value] = true;
+				}
+			}
+		}
+		Arrays.fill(has, false);
+		
+		//q1
+		for (int i = 2; i < 4; i++){
+			//go through each column digit
+			for (int j = 0; j < 2; j++){
+				value = state[j][i];
+				if (has[value]){
+					points++;
+				}
+				else{
+					has[value] = true;
+				}
+			}
+		}
+		Arrays.fill(has, false);
+		
+		//q3
+		for (int i = 0; i < 2; i++){
+			//go through each column digit
+			for (int j = 2; j < 4; j++){
+				value = state[j][i];
+				if (has[value]){
+					points++;
+				}
+				else{
+					has[value] = true;
+				}
+			}
+		}
+		Arrays.fill(has, false);
+		
+		//q4
+		for (int i = 2; i < 4; i++){
+			//go through each column digit
+			for (int j = 2; j < 4; j++){
+				value = state[j][i];
+				if (has[value]){
+					points++;
+				}
+				else{
+					has[value] = true;
+				}
+			}
+		}
+		Arrays.fill(has, false);
+		
+		return points;
+	}
+	
 	public void climb(){
 		//randomly choose an asterisk, see if adjusting value will provide improvemnet
 		//if not, try another asterisk
+		/*
 		for (int i=0; i<indexOfIndex; i++){
-			System.out.println(indexOfAst[i]);
+			//System.out.println(indexOfAst[i]);
 			int temp = indexOfAst[i];
 			int tempI = temp/4;
 			int tempJ = temp%4;
-			System.out.println("["+tempI+"]["+tempJ+"]");
+			//System.out.println("["+tempI+"]["+tempJ+"]");
+		}*/
+		
+		
+		int tempInd = rand.nextInt(indexOfIndex);
+		int temp = indexOfAst[tempInd];
+		int tempI = temp/4;
+		int tempJ = temp%4;
+		
+		int[][] testState = new int[4][4];
+		for (int i=0; i < board.length; i++)
+		{
+			int[] aBoard = board[i];
+			int aLength = aBoard.length;
+			testState[i] = new int[aLength];
+			System.arraycopy(aBoard, 0, testState[i], 0, aLength);
 		}
+		//printInternalState(testState);
+		//System.out.println(checkInternalState(testState));
+		int bestVal = board[tempI][tempJ];
+		int conflict = checkInternalState(board);
+		int tempCheckState;
+		
+		for (int i = 1; i <=4; i++){
+			testState[tempI][tempJ] = i;
+			tempCheckState = checkInternalState(testState);
+			if (tempCheckState < conflict){
+				conflict = tempCheckState;
+				bestVal = i;
+			}
+		}
+		board[tempI][tempJ] = bestVal;
 	}
 	
 	public static void main(String args[]){

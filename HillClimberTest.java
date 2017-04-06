@@ -11,6 +11,12 @@ public class HillClimberTest {
 		HillClimber h = new HillClimber("test.txt");
 		h.printState();
 		System.out.println(h.checkState());
-		h.climb();
+		//h.climb();
+		
+		for(int i = 0; i < 50 || h.checkState() == 0; i++){
+			h.climb();
+			h.printState();
+			System.out.println(h.checkState());
+		}
 	}
 }
